@@ -5,6 +5,7 @@ client = MongoClient('localhost', 27017)
 db = client.flask_db
 todos = db.todos
 Reza = db.Reza
+User = db.User
 
 
 def create_Model(name):
@@ -21,6 +22,11 @@ def set_Model(content, name):
     return True
 
 
+def InsertUserModel(Name, Family):
+    User.insert_one({'Name': str(Name), 'Family': str(Family)})
+    return True
+
+
 def set_Model_NewTable(Family, name):
     Reza.insert_one({'Name': str(Family), 'Family': str(name)})
     return True
@@ -28,6 +34,11 @@ def set_Model_NewTable(Family, name):
 
 def get_Model():
     resultModel = todos.find({})
+    return resultModel
+
+
+def get_User():
+    resultModel = User.find({})
     return resultModel
 
 
@@ -46,8 +57,11 @@ def Delete(id):
     return True
 
 
-def Delete2(id):
-    Reza.delete_one({"_id": ObjectId(id)})
+def DeleteUser(id):
+    User.delete_one({"_id": ObjectId(id)})
     return True
 
 
+def Delete2(id):
+    Reza.delete_one({"_id": ObjectId(id)})
+    return True

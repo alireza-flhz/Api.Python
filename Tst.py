@@ -9,32 +9,40 @@ import tst2
 app = Flask(__name__, static_folder='static')
 
 
-@app.route('/AddOldModel', methods=('GET', 'POST'))
-def home_page():
-    if request.method == 'POST':
-        content = request.form['content']
-        degree = request.form['degree']
-        tst2.set_Model(content, degree)
-    all_todos = tst2.get_Model_NewTable()
-    tod = tst2.get_Model()
-    return render_template('createnew.html', todos=all_todos, tod=tod)
-
-
 @app.route('/', methods=('GET', 'POST'))
 def home_page_NewTAble():
     if request.method == 'POST':
         content = request.form['Name']
         degree = request.form['Family']
         tst2.set_Model_NewTable(content, degree)
-    all_todos = tst2.get_Model_NewTable()
+    todos = tst2.get_Model_NewTable()
     tod = tst2.get_Model()
-    return render_template('createnew.html', todos=all_todos, tod=tod)
+    User = tst2.get_User()
+    return render_template('createnew.html', todos=todos, tod=tod, user=User)
 
 
-@app.route('/addcollection', methods=['GET'])
-def add_Collection():
-    tst2.create_Model("User")
-    return "True"
+@app.route('/AddOldModel', methods=('GET', 'POST'))
+def home_page():
+    if request.method == 'POST':
+        content = request.form['content']
+        degree = request.form['degree']
+        tst2.set_Model(content, degree)
+    todos = tst2.get_Model_NewTable()
+    tod = tst2.get_Model()
+    User = tst2.get_User()
+    return render_template('createnew.html', todos=todos, tod=tod, user=User)
+
+
+@app.route('/InsertUser', methods=('GET', 'POST'))
+def add_User():
+    if request.method == 'POST':
+        Name = request.form['Name']
+        Family = request.form['Family']
+        tst2.InsertUserModel(Name, Family)
+    todos = tst2.get_Model_NewTable()
+    User = tst2.get_User()
+    tod = tst2.get_Model()
+    return render_template('createnew.html', todos=todos, tod=tod, user=User)
 
 
 @app.route('/getcollections', methods=['GET'])
@@ -70,6 +78,12 @@ def Index_Model():
 @app.post('/<id>/delete/')
 def delete(id):
     tst2.Delete(id)
+    return redirect("/")
+
+
+@app.post('/<id>/DeleteUser/')
+def DeleteUser(id):
+    tst2.DeleteUser(id)
     return redirect("/")
 
 

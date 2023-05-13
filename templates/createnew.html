@@ -21,13 +21,7 @@
         <button type="submit">Submit</button>
     </form>
     <div class="flexclass">
-        <div>  
-
-
-
-
-
-            
+        <div>              
             <form method="post">
                 <p>
                     <b><label for="Name">Name</label></b>
@@ -78,6 +72,33 @@
                     <p>{{ todo['content'] }} <i>({{ todo['degree']}})</i></p>
                 </div>
                 <form method="POST" action="{{ url_for('delete', id=todo['_id']) }}" >
+                    <input type="submit" value="Delete Todo"
+                        onclick="return confirm('Are you sure you want to delete this entry?')">
+                </form>
+                {% endfor %}
+            </div>
+            <div>
+                <form method="post" action="/InsertUser">
+                    <p>
+                        <b><label for="Name">Name</label></b>
+                    </p>
+                    <p>
+                        <input type="text" name="Name" placeholder="Name">
+                    </p>
+            
+                    <p>
+                        <b><label for="Family">Degree</label></b>
+                    </p>
+                    <p>
+                        <input id="degree-0" name="Family" required type="text"  placeholder="Family">
+                    </p>
+                    <button type="submit">Submit</button>
+                </form>  
+                {% for todo in user %}
+                <div class="todo">
+                    <p>{{ todo['Name'] }} <i>({{ todo['Family']}})</i></p>
+                </div>
+                <form method="POST" action="{{ url_for('DeleteUser', id=todo['_id']) }}" >
                     <input type="submit" value="Delete Todo"
                         onclick="return confirm('Are you sure you want to delete this entry?')">
                 </form>
