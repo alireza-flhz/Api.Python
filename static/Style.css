@@ -1,0 +1,11 @@
+.todo {
+    padding: 20px;
+    margin: 10px;
+    background-color: #eee;
+    width:50%;
+}
+.flexclass{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
