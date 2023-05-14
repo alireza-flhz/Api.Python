@@ -52,6 +52,24 @@ def GEt_Model_withSearch(name):
     return returnList
 
 
+def GEt_User_withSearch(name):
+    returnList = User.find({'Name': {'$regex': name}})
+    return returnList
+
+
+def GEt_REza_withSearch(name):
+    returnList = Reza.find({'Name': {'$regex': name}})
+    return returnList
+
+
+def FindUser(name, family):
+    user = User.find_one({'Name': name, 'Family': family})
+    if user:
+        return True
+    else:
+        return False
+
+
 def Delete(id):
     todos.delete_one({"_id": ObjectId(id)})
     return True

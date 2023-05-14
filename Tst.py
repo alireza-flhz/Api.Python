@@ -16,9 +16,9 @@ def home_page_NewTAble():
         degree = request.form['Family']
         tst2.set_Model_NewTable(content, degree)
     todos = tst2.get_Model_NewTable()
-    tod = tst2.get_Model()
+    td = tst2.get_Model()
     User = tst2.get_User()
-    return render_template('createnew.html', todos=todos, tod=tod, user=User)
+    return render_template('createnew.html', todos=todos, tod=td, user=User)
 
 
 @app.route('/AddOldModel', methods=('GET', 'POST'))
@@ -28,9 +28,9 @@ def home_page():
         degree = request.form['degree']
         tst2.set_Model(content, degree)
     todos = tst2.get_Model_NewTable()
-    tod = tst2.get_Model()
+    td = tst2.get_Model()
     User = tst2.get_User()
-    return render_template('createnew.html', todos=todos, tod=tod, user=User)
+    return render_template('createnew.html', todos=todos, tod=td, user=User)
 
 
 @app.route('/InsertUser', methods=('GET', 'POST'))
@@ -41,8 +41,34 @@ def add_User():
         tst2.InsertUserModel(Name, Family)
     todos = tst2.get_Model_NewTable()
     User = tst2.get_User()
-    tod = tst2.get_Model()
-    return render_template('createnew.html', todos=todos, tod=tod, user=User)
+    td = tst2.get_Model()
+    return render_template('createnew.html', todos=todos, tod=td, user=User)
+
+
+@app.route('/signup', methods=('GET', 'POST'))
+def signup():
+    if request.method == 'POST':
+        Name = request.form['Name']
+        Family = request.form['Family']
+        tst2.InsertUserModel(Name, Family)
+        return render_template('Login.html')
+    return render_template('signup.html')
+
+
+@app.route('/Login', methods=('GET', 'POST'))
+def Login():
+    if request.method == 'POST':
+        Name = request.form['Name']
+        Family = request.form['Family']
+        result = tst2.FindUser(Name, Family)
+        if result:
+            return redirect("/")
+        else:
+            td = tst2.get_Model_NewTable()
+            Us = tst2.get_User()
+            to = tst2.get_Model()
+            return render_template('createnew.html', todos=td, tod=to, user=Us)
+    return render_template('Login.html')
 
 
 @app.route('/getcollections', methods=['GET'])
@@ -54,8 +80,10 @@ def Get_Collections():
 @app.route('/search', methods=('GET', 'POST'))
 def Get_Collections2():
     name = request.form['name']
-    collections = tst2.GEt_Model_withSearch(name)
-    return render_template('createnew.html', tod=collections)
+    col = tst2.GEt_Model_withSearch(name)
+    User = tst2.GEt_User_withSearch(name)
+    Reza = tst2.GEt_REza_withSearch(name)
+    return render_template('createnew.html', tod=col, user=User, todos=Reza)
 
 
 @app.route('/get', methods=['GET'])
