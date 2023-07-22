@@ -6,8 +6,11 @@ import time
 import json
 from flask import *
 import jwt
+import os
 from flask import render_template, request
 from flask import session, make_response, url_for, redirect
+from oauthlib import oauth2
+
 
 app = Flask(__name__, static_folder='static')
 
@@ -17,13 +20,19 @@ app.config['SECRET_KEY'] = '1072ab7e7bc14caa92b82fa60a5020af'
 def token_required(func):
     @wraps(func)
     def decorated(*args, **kwargs):
-        token = request.args.get('token')
+        token = request.cookies.get('token')
         if not token:
-            return jsonify({'Alert!': 'Token Is Missing!'})
+            return render_template('Login.html')
         try:
-            payload: jwt.decode(token, app.config['SECRET_KEY'])
+            data = jwt.decode(
+                token, app.config["SECRET_KEY"], algorithms=["HS256"])
+            gholam = tst2.FindUser(data['username'], data['expiration'])
+            if gholam:
+                return func(*args, **kwargs)
+            else:
+                return render_template('Login.html')
         except:
-            return jsonify({'Alert': 'Invalid Token!'})
+            return jsonify({'Alert': 'Error in Code!'}), 500
     return decorated
 
 
@@ -83,9 +92,14 @@ def Login():
         Family = request.form['Family']
         result = tst2.FindUser(Name, Family)
         if result:
+            payload = {
+                'username': Name,
+                'Family': Family,
+                'expiration': Family
+            }
             session['logged_in'] = True
             token = jwt.encode(
-                {'user': Name, 'expiration': Family}, app.config['SECRET_KEY'])
+                payload, app.config['SECRET_KEY'], algorithm="HS256")
             resp = make_response(render_template('createnew.html'))
             resp.set_cookie("name", Name)
             resp.set_cookie("family", Family)
